@@ -14,7 +14,7 @@ The following sections below will explain on how to install the corresponding pa
 
 # How to use PDP
 
-VNE mainly comprises of two scripts, you the developer, must implement. The publisher script and the worker script. Below is a diagram illustrating a model of how the end-to-end communication takes place between a publisher and a consumer/database.
+VNE mainly comprises of two scripts, you the developer, must implement. The publisher script (node-side plugin) and the worker script (server-side plugin). Below is a diagram illustrating a model of how the end-to-end communication takes place between a publisher and a consumer/database.
 
 |    Creating the Publisher Script:    |    Creating the Worker Script:    |
 |:---------------|:--------------|
@@ -32,18 +32,18 @@ VNE mainly comprises of two scripts, you the developer, must implement. The publ
 |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`cacert='/path/to/cacert.pem',`|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`cacert='/path/to/cacert.pem',`|
 |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`cert='/path/to/cert.pem',`|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`cert='/path/to/cert.pem',`|
 |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`key='/path/to/key.pem')`|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`key='/path/to/key.pem')`|
-|The Config function initalizes your config paramters, allowing you to: Connect to beehive-dev's rabbitmq server, Connect and transmit data to the respective virtual node, and Uses the respective authentication certificates for a secure connection.|The Config function initalizes your config paramters, allowing you to: Connect to beehive-dev's rabbitmq server, Connect and transmit data to the respective virtual node, and Uses the respective authentication certificates for a secure connection.|
-| | **This part of the script takes in your software/program that will parse and process the respective data coming from your plugin.**|
+|The Config function initalizes your config paramters, allowing you to: Connect to beehive-dev's rabbitmq server, Connect and transmit data to the virtual node, and use certificates for authentiction purposes.|The Config function initalizes your config paramters, allowing you to: Connect to beehive-dev's rabbitmq server, Connect and transmit data to the virtual node, and uses certificates for authentication purposes.|
+| | **Your code will be placed in this part of the script.** |
 |`client = beehive.PluginClient(` | `def callback(data):`|
 |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`name='(name_of_queue)',`|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`value = data.get('body')`|
 |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`config=config)`|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`return(value)`|
-|This Client function allows you to create your client script and connection. It allows you to declare a queue to send all your information and sets your configuration parameters to your config file.|Receiving messages from the queue is more complex. It works by subscribing a callback function to a queue. Whenever you receive a message, this callback function is called by the Pika library. In this case the function will send the ouput to beehive-dev's interface: [http://10.10.10.5/?all=true](http://10.10.10.5/?all=true)
-|**The remaining part of the script takes in your software/program/data to be sent to beehive-dev.**|
+|This Client function allows you to create your client script and connection. It allows you to declare a queue to send all your information and sets your configuration parameters.|Receiving messages from the queue is more complex. It works by subscribing a callback function to a queue. Whenever you receive a message, this callback function is called by the Pika library. In this case the function will send the ouput to beehive-dev's interface: [http://10.10.10.5/?all=true](http://10.10.10.5/?all=true)
+| **Your code will be placed in this part of the script.** |
 |At the end of your program, in order to send your data/plugin to rabbitmq server, you must add the following line of code:|`client = beehive.PluginClient(`|
 |`client.publish('(key)', (value))`|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`name='(name_of_queue)',`|
 |Sends it with a key and value.|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`config=config,`|
 | |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`callback=callback)`|
-| | This Client function allows you to create your client script and connection. It allows you to declare a queue to send all your information and sets your configuration parameters to your config file and sets your callback function as well.|
+| | This Client function allows you to create your client script and connection. It allows you to declare a queue to send all your information and sets your configuration parameters & callback function.|
 
 # Outcome of PDP
 
