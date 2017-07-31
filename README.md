@@ -2,6 +2,7 @@
 
 In order to test certain software via virtual nodes and observe how the data is parsed through the server and outputted to a web-interface, various plugins clients must be set up to process such data formulated by the software.
 Thus, this documentation instructs you on how you can create and run your own your node-side and server-side plugins. Using this documentation, tutorials provided below and the existing virtual nodes, you can create node-side plugins that will test your software, through a publisher script, and implement server-side plugins, through a worker-client script, that can process and handle the incoming i/o from the node-side plugin.
+
 The following sections below will explain on how to install the corresponding packages and dependencies, and will provide the steps to make your own publisher and worker scripts for software-analysis through Waggle's Beehive server.
 
 
