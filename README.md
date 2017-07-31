@@ -64,3 +64,9 @@ The following code demonstrates a simple fibonacci program that runs within beeh
 |:------------------|:-----------------|
 |![image 1](https://user-images.githubusercontent.com/25256730/28250983-a740e8b6-6a39-11e7-88b3-9a71f368088d.png)|![image](https://user-images.githubusercontent.com/25256730/28250974-96f004c4-6a39-11e7-96d9-470f9cf822b7.png)|
 
+
+# Further Implications
+
+You can also test your node-side and server-side plugins through a virtual node. Check the repository below, to learn how to create your own virutal nodes and how to run your plugins virtually.
+
+ * [Virtual-Node-Environment](https://github.com/sai6kiran/Virtual-Node-Environment.git)
