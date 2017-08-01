@@ -13,6 +13,40 @@ The following sections below will explain on how to install the corresponding pa
   * [Hello Publisher](https://github.com/seanshahkarami/hello-publisher.git)
                      
 
+# Steps to setup PDP
+
+  1.   `  cd $HOME`
+  
+  2.   `  mkdir plugin`
+  
+  3.   `  sudo apt-get update`
+  
+  4.   `  sudo apt-get upgrade`
+  
+  5.   `  sudo apt-get install git`
+  
+  6.   `  cd plugin`
+  
+  7.   `  git clone https://github.com/sai6kiran/Plugin-Data-Pipeline.git`
+  
+  8.   `  mkdir test`
+  
+  9.   `  cd test`
+  
+  10.   `  cp ~/plugin/Plugin-Data-Pipeline/requirements.txt ~/plugin/test`
+  
+  11.   `  apt-get install python3-pip`
+  
+  12.   Run: `  pip3 install -U -r requirements.txt`
+  
+  13.   Upload vnodes to `~/plugin` directory
+  
+  14.   `  mv ~/plugin/Plugin-Data-Pipeline/cacert.pem ~/plugin`
+  
+  15.   Now Create and run your plugin script.
+     
+
+
 # How to use PDP
 
 VNE mainly comprises of two scripts, you the developer, must implement. The publisher script (node-side plugin) and the worker script (server-side plugin). Below is a diagram illustrating a model of how the end-to-end communication takes place between a publisher and a consumer/database.
