@@ -39,11 +39,15 @@ The following sections below will explain on how to install the corresponding pa
   
   12.   Run: `  pip3 install -U -r requirements.txt`
   
-  13.   Upload vnodes to `~/plugin` directory
+  13.   Retrieve vnodes certificates and keys, in the form a compressed folder, from mentor.
   
-  14.   `  mv ~/plugin/Plugin-Data-Pipeline/cacert.pem ~/plugin`
+  14.   mv ~/Downloads/vnode.tar.gz ~/plugin
   
-  15.   Now Create and run your plugin script.
+  15.   tar xzf ~/plugin/vnode.tar.gz
+  
+  16.   `  mv ~/plugin/Plugin-Data-Pipeline/cacert.pem ~/plugin`
+  
+  17.   Now Create and run your plugin script.
      
 
 
@@ -58,24 +62,27 @@ VNE mainly comprises of two scripts, you the developer, must implement. The publ
 |`from waggle import beehive`| `from waggle import beehive` |
 |`import pika`| `import pika` |
 |The following packages and dependicies to import in order to run plugin. Other packages can be imported.|The following packages and dependicies to import in order to run worker client. Other packages can be imported.|
+|`n="(n)"`|`n="(n)"` |
+|Specifiy the number of which virtual node you wish to send your plugin data to. The data will then be sent to virtual node: 000002000000000(n-1).|Specifiy the number of which virtual node you wish to send your plugin data to. The data will then be sent to virtual node: 000002000000000(n-1).|
 |`config = beehive.ClientConfig(`|`config = beehive.ClientConfig(`|
 |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`host='beehive.mcs.anl.gov',`|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`host='beehive.mcs.anl.gov',`|
 |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`port=23181,`|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`port=23181,`|
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`node='000002000000000(n)',`|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`node='000002000000000(n)',`|
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`node='000002000000000'+str(int(n)-1),`|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`node='000002000000000'+str(int(n)-1),`|
 |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`username = '(username1)',`|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`username = '(username2)',`|
 |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`password = '(password1)'`|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`password = '(password2)'`|
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`cacert='/path/to/cacert.pem',`|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`cacert='/path/to/cacert.pem',`|
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`cert='/path/to/cert.pem',`|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`cert='/path/to/cert.pem',`|
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`key='/path/to/key.pem')`|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`key='/path/to/key.pem')`|
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`cacert='~/plugin/cacert.pem',`|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`cacert='~/plugin/cacert.pem',`|
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`cert='~/plugin/vnode/vnode'+str(int(n))+'/cert.pem',`|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`cert='~/plugin/vnode/vnode'+str(int(n))+'/cert.pem',`|
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`key='~/plugin/vnode/vnode'+str(int(n))+'/key.pem')`|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`key='~/plugin/vnode/vnode'+str(int(n))+'/key.pem')`|
 |The Config function initalizes your config paramters, allowing you to: Connect to beehive-dev's rabbitmq server, Connect and transmit data to the virtual node, and use certificates for authentiction purposes.|The Config function initalizes your config paramters, allowing you to: Connect to beehive-dev's rabbitmq server, Connect and transmit data to the virtual node, and uses certificates for authentication purposes.|
+| **Default username1=fib-publisher , password1=waggle** |  **Default username2=worker-fib , password=waggle** |
 | | **Your code will be placed in this part of the script.** |
 |`client = beehive.PluginClient(` | `def callback(data):`|
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`name='(name_of_queue)',`|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`value = data.get('body')`|
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`name=test:1,`|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`value = data.get('body')`|
 |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`config=config)`|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`return(value)`|
 |This Client function allows you to create your client script and connection. It allows you to declare a queue to send all your information and sets your configuration parameters.|Receiving messages from the queue is more complex. It works by subscribing a callback function to a queue. Whenever you receive a message, this callback function is called by the Pika library. In this case the function will send the ouput to beehive-dev's interface: [http://10.10.10.5/?all=true](http://10.10.10.5/?all=true)
 | **Your code will be placed in this part of the script.** |
 |At the end of your program, in order to send your data/plugin to rabbitmq server, you must add the following line of code:|`client = beehive.PluginClient(`|
-|`client.publish('(key)', (value))`|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`name='(name_of_queue)',`|
+|`client.publish('(key)', (value))`|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`name=test:1,`|
 |Sends it with a key and value.|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`config=config,`|
 | |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`callback=callback)`|
 | | This Client function allows you to create your client script and connection. It allows you to declare a queue to send all your information and sets your configuration parameters & callback function.|
