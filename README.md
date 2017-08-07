@@ -37,13 +37,13 @@ The following sections below will explain on how to install the corresponding pa
   
   11.   `  apt-get install python3-pip`
   
-  12.   Run: `  pip3 install -U -r requirements.txt`
+  12.   `  pip3 install -U -r requirements.txt`
   
   13.   Retrieve vnodes certificates and keys, in the form a compressed folder, from mentor.
   
-  14.   mv ~/Downloads/vnode.tar.gz ~/plugin
+  14.   `  mv ~/Downloads/vnode.tar.gz ~/plugin`
   
-  15.   tar xzf ~/plugin/vnode.tar.gz
+  15.   `  tar xzf ~/plugin/vnode.tar.gz`
   
   16.   `  mv ~/plugin/Plugin-Data-Pipeline/cacert.pem ~/plugin`
   
